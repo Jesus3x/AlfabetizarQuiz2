@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz de Alfabetização</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+    .box {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 10px 15px;
+      margin: 8px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .hidden {
+      display: none;
+    }
+    h1 {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h1>🌟 Quiz de Alfabetização 🌟</h1>
+    <h2 id="fase"></h2>
+    <p id="pergunta"></p>
+    <div id="opcoes"></div>
+    <p id="mensagem"></p>
+    <button id="proximo" class="hidden" onclick="proximaPergunta()">Próximo ➡️</button>
+  </div>
+
+  <script>
+    const fases = [
+      {
+        nome: "Fase 1 – Letras",
+        perguntas: [
+          { pergunta: "Qual é a letra A?", opcoes: ["B", "A", "C"], correta: 1 },
+          { pergunta: "Qual é a letra B?", opcoes: ["D", "C", "B"], correta: 2 }
+        ]
+      },
+      {
+        nome: "Fase 2 – Sílabas",
+        perguntas: [
+          { pergunta: "CA + SA = ?", opcoes: ["CASA", "CAMA", "COPO"], correta: 0 },
+          { pergunta: "BO + LA = ?", opcoes: ["BOLA", "BELA", "BALA"], correta: 0 }
+        ]
+      },
+      {
+        nome: "Fase 3 – Palavras",
+        perguntas: [
+          { pergunta: "Qual é o desenho que late?", opcoes: ["GATO", "CACHORRO", "PATO"], correta: 1 },
+          { pergunta: "Qual palavra é uma fruta?", opcoes: ["MAÇÃ", "CADEIRA", "SAPATO"], correta: 0 }
+        ]
+      }
+    ];
+
+    let faseAtual = 0;
+    let perguntaAtual = 0;
+
+    function mostrarPergunta() {
+      document.getElementById("mensagem").textContent = "";
+      document.getElementById("proximo").classList.add("hidden");
+
+      const fase = fases[faseAtual];
+      const pergunta = fase.perguntas[perguntaAtual];
+
+      document.getElementById("fase").textContent = fase.nome;
+      document.getElementById("pergunta").textContent = pergunta.pergunta;
+
+      const opcoesDiv = document.getElementById("opcoes");
+      opcoesDiv.innerHTML = "";
+
+      pergunta.opcoes.forEach((opcao, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = opcao;
+        btn.onclick = () => verificarResposta(index);
+        opcoesDiv.appendChild(btn);
+      });
+    }
+
+    function verificarResposta(escolha) {
+      const pergunta = fases[faseAtual].perguntas[perguntaAtual];
+      const mensagem = document.getElementById("mensagem");
+
+      if (escolha === pergunta.correta) {
+        mensagem.textContent = "🎉 Muito bem!";
+        document.getElementById("proximo").classList.remove("hidden");
+      } else {
+        mensagem.textContent = "❌ Tente novamente!";
+      }
+    }
+
+    function proximaPergunta() {
+      perguntaAtual++;
+      if (perguntaAtual >= fases[faseAtual].perguntas.length) {
+        faseAtual++;
+        perguntaAtual = 0;
+        if (faseAtual >= fases.length) {
+          document.querySelector(".box").innerHTML = "<h1>🏆 Parabéns! Você completou o quiz!</h1>";
+          return;
+        }
+      }
+      mostrarPergunta();
+    }
+
+    mostrarPergunta();
+  </script>
+
+</body>
+</html>
